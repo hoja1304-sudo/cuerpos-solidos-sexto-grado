@@ -414,9 +414,9 @@ function plain(h){const d=document.createElement('div');d.innerHTML=h;return d.t
 function say(t){if(!('speechSynthesis' in window))return;if(speechSynthesis.speaking){speechSynthesis.cancel();return;}const u=new SpeechSynthesisUtterance(t),vs=speechSynthesis.getVoices(),es=vs.filter(v=>/^es/i.test(v.lang)),v=es.find(v=>/es[-_](MX|US|419)/i.test(v.lang))||es[0];u.lang=v?v.lang.replace(/_/g,'-'):'es-US';if(v)u.voice=v;u.rate=.9;speechSynthesis.speak(u);}
 function render(){const box=$('genItems');box.innerHTML='';score=0;done=0;$('genScore').textContent='Aciertos: 0 de '+items.length;
 items.forEach((it,i)=>{const c=document.createElement('article');c.className='gItem';c.id='gi'+i;
-c.innerHTML=`<div class="gTop"><span class="gNum">Ítem ${i+1} · ${it.name}</span><span class="noprint gBtns"><button class="gBtn" data-a="say">🔊 Escuchar</button><button class="gBtn" data-a="print">🖨️ Imprimir</button></span></div><p class="gStem">${i+1}) ${it.stem}</p><div class="gFig">${it.svg}</div><p class="gQ">${it.q}</p><div class="gOpts">${it.options.map((o,j)=>`<button class="gOpt" data-j="${j}"><b>${'ABCD'[j]})</b> ${o.t}</button>`).join('')}</div><div class="gFb noprint" aria-live="polite"></div>`;
+c.innerHTML=`<div class="gTop"><span class="gNum">Ítem ${i+1} · ${it.name}</span><span class="noprint gBtns"><button class="gBtn" data-a="say">🔊 Escuchar</button></span></div><p class="gStem">${i+1}) ${it.stem}</p><div class="gFig">${it.svg}</div><p class="gQ">${it.q}</p><div class="gOpts">${it.options.map((o,j)=>`<button class="gOpt" data-j="${j}"><b>${'ABCD'[j]})</b> ${o.t}</button>`).join('')}</div><div class="gFb noprint" aria-live="polite"></div>`;
 c.querySelector('[data-a=say]').onclick=()=>say(plain(it.stem)+' '+plain(it.q)+' '+it.options.map((o,j)=>'Opción '+'ABCD'[j]+': '+plain(o.t)).join('. '));
-c.querySelector('[data-a=print]').onclick=()=>printOne(c);
+
 c.querySelectorAll('.gOpt').forEach(b=>b.onclick=()=>answer(c,it,+b.dataset.j));box.appendChild(c);});}
 function answer(c,it,j){if(c.dataset.done)return;c.dataset.done=1;done++;const fb=c.querySelector('.gFb'),btns=c.querySelectorAll('.gOpt'),ok=it.options[j].ok;btns.forEach(b=>b.disabled=true);
 btns[j].classList.add(ok?'good':'bad');if(!ok){btns[it.options.findIndex(o=>o.ok)].classList.add('good');}
