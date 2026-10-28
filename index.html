@@ -35,8 +35,8 @@ body:not(.practicing) .layout{grid-template-columns:1fr}body:not(.practicing) .s
 .gStem,.gQ{color:var(--ink);font-size:16px;margin:8px 0}.gFig{display:flex;justify-content:center;margin:6px 0}.fg{width:100%;max-width:440px;height:auto}
 .fg line,.fg path,.fg ellipse,.fg circle,.fg rect{stroke:var(--ink);fill:none}.fg circle.dot{fill:var(--ink);stroke:none}.fg text{fill:var(--ink);stroke:none;font-family:Arial,sans-serif;font-weight:400!important}.fg .hl{stroke:#d96743;stroke-width:4.5}
 .ov{display:inline-block;border-top:1.5px solid currentColor;line-height:1.05;padding-top:1px}
-.gOpts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
-.gOpt{min-height:48px;text-align:left;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:30px;padding:8px 18px;font-size:16px}
+.gOpts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.gOpt{min-height:44px;text-align:center;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:30px;padding:6px 8px;font-size:15px}
 .gOpt:hover:not(:disabled){border-color:var(--teal)}.gOpt.good{background:#23874f;border-color:#23874f;color:#fff}.gOpt.bad{background:#c4502a;border-color:#c4502a;color:#fff}.gOpt:disabled{opacity:1;cursor:default}
 .gFb{margin-top:12px;border-radius:14px;padding:0 14px}.gFb.okfb,.gFb.badfb{padding:12px 14px}.okfb{background:#23874f;color:#fff}.badfb{background:var(--bg);border:1px solid #c4502a;color:var(--ink)}.gFb ol{margin:6px 0 0;padding-left:20px}.gFb p{margin:4px 0}
 .printOnly{display:none}
@@ -414,7 +414,7 @@ function plain(h){const d=document.createElement('div');d.innerHTML=h;return d.t
 function say(t){if(!('speechSynthesis' in window))return;if(speechSynthesis.speaking){speechSynthesis.cancel();return;}const u=new SpeechSynthesisUtterance(t),vs=speechSynthesis.getVoices(),es=vs.filter(v=>/^es/i.test(v.lang)),v=es.find(v=>/es[-_](MX|US|419)/i.test(v.lang))||es[0];u.lang=v?v.lang.replace(/_/g,'-'):'es-US';if(v)u.voice=v;u.rate=.9;speechSynthesis.speak(u);}
 function render(){const box=$('genItems');box.innerHTML='';score=0;done=0;$('genScore').textContent='Aciertos: 0 de '+items.length;
 items.forEach((it,i)=>{const c=document.createElement('article');c.className='gItem';c.id='gi'+i;
-c.innerHTML=`<div class="gTop"><span class="gNum">Ítem ${i+1} · ${it.name}</span><span class="noprint gBtns"><button class="gBtn" data-a="say">🔊 Escuchar</button></span></div><p class="gStem">${i+1}) ${it.stem}</p><div class="gFig">${it.svg}</div><p class="gQ">${it.q}</p><div class="gOpts">${it.options.map((o,j)=>`<button class="gOpt" data-j="${j}"><b>${'ABCD'[j]})</b> ${o.t}</button>`).join('')}</div><div class="gFb noprint" aria-live="polite"></div>`;
+if(it.options.length>3){const k=it.options.findIndex(o=>o.ok),w=it.options.filter((o,j)=>j!==k).slice(0,2);it.options=it.options.filter((o,j)=>j===k||w.includes(o));}c.innerHTML=`<div class="gTop"><span class="gNum">Ítem ${i+1} · ${it.name}</span><span class="noprint gBtns"><button class="gBtn" data-a="say">🔊 Escuchar</button></span></div><p class="gStem">${i+1}) ${it.stem}</p><div class="gFig">${it.svg}</div><p class="gQ">${it.q}</p><div class="gOpts">${it.options.map((o,j)=>`<button class="gOpt" data-j="${j}"><b>${'ABCD'[j]})</b> ${o.t}</button>`).join('')}</div><div class="gFb noprint" aria-live="polite"></div>`;
 c.querySelector('[data-a=say]').onclick=()=>say(plain(it.stem)+' '+plain(it.q)+' '+it.options.map((o,j)=>'Opción '+'ABCD'[j]+': '+plain(o.t)).join('. '));
 
 c.querySelectorAll('.gOpt').forEach(b=>b.onclick=()=>answer(c,it,+b.dataset.j));box.appendChild(c);});}
